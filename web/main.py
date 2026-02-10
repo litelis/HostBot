@@ -9,7 +9,8 @@ import json
 import os
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Any, Dict, List, Optional
+
 
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect, HTTPException, Request
 from fastapi.staticfiles import StaticFiles
@@ -48,7 +49,8 @@ class ConfigRequest(BaseModel):
 class ConfigStatus(BaseModel):
     configured: bool
     missing: List[str]
-    current_values: Dict[str, any]
+    current_values: Dict[str, Any]
+
 
 
 # Create FastAPI app

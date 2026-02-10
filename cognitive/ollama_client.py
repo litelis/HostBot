@@ -15,11 +15,13 @@ class OllamaClient:
     
     def __init__(self):
         self.base_url = settings.ollama_host.rstrip("/")
+        self.host = self.base_url
         self.model = settings.ollama_model
         self.timeout = settings.ollama_timeout
         self.max_tokens = settings.ollama_max_tokens
         
         logger.info(f"Ollama client initialized: {self.base_url} (model: {self.model})")
+
     
     @retry(
         stop=stop_after_attempt(3),
