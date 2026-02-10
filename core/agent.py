@@ -94,8 +94,9 @@ class Agent:
             
             # Check vision model availability - NEW
             vision_models = await self.ollama.list_models()
-            vision_available = any("llava" in m.lower() for m in vision_models)
+            vision_available = any("llava" in m.get("name", "").lower() for m in vision_models)
             if not vision_available:
+
                 logger.warning("No vision model (llava) found - vision features disabled")
                 self.vision_enabled = False
             
