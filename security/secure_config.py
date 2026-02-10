@@ -8,6 +8,9 @@ from pathlib import Path
 
 from loguru import logger
 
+from config.settings import settings
+
+
 
 class SecureConfig:
     """
@@ -41,22 +44,26 @@ class SecureConfig:
     def _validate_environment(self):
         """Validate that all required environment variables are set."""
         missing = []
-        for var in self.REQUIRED_VARS:
-            if not os.getenv(var):
-                missing.append(var)
+        
+        # Use pydantic-settings which properly parses .env files
+        if not settings.discord_token:
+            missing.append("DISCORD_TOKEN")
+        if not settings.discord_admin_user_id:
+            missing.append("DISCORD_ADMIN_USER_ID")
         
         if missing:
             raise RuntimeError(
-                f"Missing required environment variables: {', '.join(missing)}\\n"
+                f"Missing required environment variables: {', '.join(missing)}\n"
                 f"Please set these in your .env file or environment."
             )
         
         # Check for default/weak emergency stop code
-        emergency_code = os.getenv("EMERGENCY_STOP_CODE", "")
+        emergency_code = settings.emergency_stop_code
         if emergency_code in ["STOP123", "123456", "password", "admin"]:
             logger.warning("WARNING: Using default emergency stop code. Please change it in .env!")
         
         logger.info("Environment validation passed")
+
     
     def get(self, key: str, default: Any = None, sensitive: bool = False) -> Any:
         """
@@ -80,7 +87,7 @@ class SecureConfig:
     
     def get_discord_token(self) -> str:
         """Get Discord token securely."""
-        token = self.get("DISCORD_TOKEN", sensitive=True)
+        token = settings.discord_token
         if not token:
             raise RuntimeError("DISCORD_TOKEN not set")
         
@@ -88,11 +95,15 @@ class SecureConfig:
         if len(token) < 50:
             logger.warning("Discord token seems unusually short - verify it's correct")
         
+        # Store hash for rotation detection
+        self._key_hashes["DISCORD_TOKEN"] = self._hash_value(token)
+        
         return token
+
     
     def get_emergency_code(self) -> str:
         """Get emergency stop code securely."""
-        code = self.get("EMERGENCY_STOP_CODE", sensitive=True)
+        code = settings.emergency_stop_code
         if not code:
             return "STOP123"  # Fallback (will warn in logs)
         
@@ -100,7 +111,11 @@ class SecureConfig:
         if len(code) < 6:
             logger.warning("Emergency stop code should be at least 6 characters")
         
+        # Store hash for rotation detection
+        self._key_hashes["EMERGENCY_STOP_CODE"] = self._hash_value(code)
+        
         return code
+
     
     def check_key_rotation(self, key: str) -> bool:
         """
