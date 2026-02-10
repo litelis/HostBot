@@ -1,208 +1,252 @@
-# HostBot
+# 🤖 HostBot - Agente Autónomo de Control Total
 
-Agente autónomo de control de sistemas operativos controlado por Discord e IA local.
+**HostBot** es un agente autónomo de propósito general capaz de controlar completamente un ordenador Windows mediante comandos en lenguaje natural, ya sea a través de Discord o una interfaz web moderna.
 
-## ¿Qué es HostBot?
+## ✨ Características Principales
 
-HostBot es un agente autónomo que permite controlar un ordenador completo a través de comandos de Discord. Utiliza Ollama (IA local) para interpretar instrucciones en lenguaje natural y ejecutar acciones en el sistema operativo.
+### 🧠 Inteligencia Artificial
+- **Ollama Local**: Usa modelos de IA locales (Llama, Mistral, etc.)
+- **Brain Orchestrator**: Coordinador central de IA que gestiona múltiples modelos
+- **Planificación Inteligente**: Genera planes paso a paso para tareas complejas
+- **Razonamiento Encadenado**: Capacidad de auto-evaluación y corrección
 
-## Características principales
+### 👁️ Visión por Computadora
+- **Captura de Pantalla**: Análisis visual del escritorio en tiempo real
+- **Detección de Elementos**: Encuentra botones, campos de texto, etc.
+- **OCR Inteligente**: Lee texto visible en pantalla
+- **Modo "Ver y Actuar"**: Toma decisiones basadas en lo que ve
 
-- **Control total del sistema**: Comandos, archivos, procesos
-- **Automatización de escritorio**: Ratón, teclado, capturas de pantalla
-- **Navegación web**: Automatización de navegador con Playwright
-- **Gestión de software**: Instalación y configuración de aplicaciones
-- **IA local**: Procesamiento con Ollama, sin dependencias externas
-- **Seguridad integrada**: Confirmaciones, auditoría completa, parada de emergencia
+### 🎮 Control Total del Sistema
+- **Escritorio**: Control completo de ratón y teclado
+- **Sistema**: Ejecución de comandos, gestión de archivos y procesos
+- **Navegador**: Automatización web con Playwright
+- **Software**: Instalación y configuración de aplicaciones
 
-## ⚠️ Advertencia de seguridad
+### 🛡️ Seguridad Avanzada
+- **Confirmaciones Interactivas**: Pregunta antes de acciones críticas
+- **Modos de Seguridad**: Strict / Moderate / Minimal
+- **Parada de Emergencia**: Botón de STOP inmediato
+- **Auditoría Completa**: Registro de todas las acciones
 
-**Este sistema tiene control total sobre el ordenador. Úsalo con extrema precaución.**
+### 🌐 Interfaz Web Moderna
+- **Dashboard en Tiempo Real**: WebSocket para actualizaciones instantáneas
+- **Setup Wizard**: Configuración guiada paso a paso
+- **Vista Previa de Pantalla**: Captura y análisis visual
+- **Tema Oscuro Tech**: Diseño moderno con efectos neón
 
-- Ejecuta siempre en modo `strict` inicialmente
-- Solo usuarios autorizados de Discord pueden ejecutar comandos
-- El sistema de parada de emergencia está siempre activo
-- Todas las acciones se registran para auditoría
-- Las acciones críticas requieren confirmación explícita
-- Rate limiting integrado para prevenir abuso
-- Validación estricta de todas las entradas
+## 🚀 Instalación Rápida
 
-## Requisitos
-
-- Python 3.8+
-- Windows 10/11 (principal), Linux/macOS (parcial)-
-- Ollama ejecutándose localmente
-- Token de bot de Discord
-
-## Instalación completa
-
-### Paso 1: Clonar el repositorio
-
+### 1. Clonar el Repositorio
 ```bash
-git clone https://github.com/tu-usuario/hostbot.git
-cd hostbot
+git clone https://github.com/litelis/HostBot.git
+cd HostBot
 ```
 
-### Paso 2: Ejecutar el script de setup
-
-El script `setup.py` verificará e instalará automáticamente todas las dependencias:
-
+### 2. Ejecutar Setup
 ```bash
 python setup.py
 ```
 
-Este script comprobará:
-- ✅ Versión de Python (3.8+)
-- ✅ Ollama instalado y ejecutándose
-- ✅ Modelos de Ollama disponibles
-- ✅ Dependencias de Python
-- ✅ Playwright y navegadores
-- ✅ Variables de entorno configuradas
+El setup interactivo te guiará para:
+- Instalar dependencias (con o sin virtual environment)
+- Configurar Discord Bot
+- Configurar Ollama
+- Seleccionar permisos del sistema
 
-### Paso 3: Configurar variables de entorno
+### 3. Iniciar Servicios
 
+**Interfaz Web:**
 ```bash
-cp .env.example .env
-# Edita .env con tu configuración
+cd web
+python main.py
 ```
+Accede a: http://localhost:8080
 
-Variables obligatorias:
-- `DISCORD_TOKEN`: Token de tu bot de Discord ([crear bot](https://discord.com/developers/applications))
-- `DISCORD_ADMIN_USER_ID`: Tu ID de usuario de Discord
-- `OLLAMA_MODEL`: Modelo a usar (recomendado: llama3.2, codellama, o mistral)
-
-### Paso 4: Iniciar el agente
-
+**Bot de Discord:**
 ```bash
 python main.py
 ```
 
-## Configuración de Ollama
+## 📋 Configuración
 
-### Instalación de Ollama
+### Discord Bot
+1. Ve a [Discord Developer Portal](https://discord.com/developers/applications)
+2. Crea una nueva aplicación
+3. En la sección "Bot", genera un token
+4. Activa estos intents:
+   - MESSAGE CONTENT INTENT
+   - SERVER MEMBERS INTENT
+5. Copia el token al archivo `.env`
 
-**Windows:**
-1. Descarga desde [ollama.com](https://ollama.com)
-2. Ejecuta el instalador
-3. Ollama se ejecutará automáticamente en segundo plano
-
-**Linux/macOS:**
+### Ollama
+1. Descarga [Ollama](https://ollama.ai)
+2. Instala un modelo:
 ```bash
-curl -fsSL https://ollama.com/install.sh | sh
-```
-
-### Descargar modelos
-
-Una vez instalado Ollama, descarga un modelo:
-
-```bash
-# Modelo recomendado (equilibrado)
 ollama pull llama3.2
-
-# Alternativas según uso:
-ollama pull codellama    # Para técnicas/programación
-ollama pull mistral      # Para tareas generales
-ollama pull llava        # Para análisis de imágenes
+ollama pull llava  # Para visión (opcional)
 ```
-
-Verifica que Ollama funciona:
+3. Verifica que Ollama está corriendo:
 ```bash
 ollama list
-ollama run llama3.2
 ```
 
-## Cómo funciona el código
+## 🎯 Uso
 
-### Arquitectura del sistema
+### Interfaz Web
+1. Abre http://localhost:8080
+2. Si es primera vez, el Setup Wizard te guiará
+3. En el Dashboard, escribe comandos en lenguaje natural:
+   - "Abre Chrome y busca Python tutorials"
+   - "Toma una captura de pantalla y dime qué ves"
+   - "Instala VS Code"
+   - "Automatiza el login en GitHub"
 
-HostBot está organizado en capas modulares:
-
+### Discord
+Envía comandos en el canal configurado:
 ```
-┌─────────────────────────────────────┐
-│         Capa de Control            │
-│      (Discord - bot/)            │
-│  - Recepción de comandos           │
-│  - Gestión de autorizaciones       │
-│  - Comunicación en tiempo real     │
-└─────────────┬───────────────────────┘
-              ▼
-┌─────────────────────────────────────┐
-│        Capa Cognitiva              │
-│    (Ollama - cognitive/)           │
-│  - Interpretación de lenguaje      │
-│  - Generación de planes            │
-│  - Razonamiento paso a paso        │
-└─────────────┬───────────────────────┘
-              ▼
-┌─────────────────────────────────────┐
-│       Capa de Ejecución            │
-│     (Sistema - execution/)         │
-│  - Control de escritorio           │
-│  - Automatización de apps          │
-│  - Navegador web                   │
-│  - Comandos del sistema            │
-└─────────────┬───────────────────────┘
-              ▼
-┌─────────────────────────────────────┐
-│        Capa de Seguridad           │
-│      (Protección - safety/)          │
-│  - Sistema de confirmaciones       │
-│  - Auditoría completa              │
-│  - Parada de emergencia            │
-│  - Control de permisos             │
-└─────────────────────────────────────┘
+!agent Abre el navegador y busca las últimas noticias de tecnología
+!agent Toma una captura de pantalla
+!agent Instala Node.js
 ```
 
-### Flujo de ejecución
-
-1. **Usuario envía orden** → Discord recibe el mensaje
-2. **Análisis semántico** → Ollama interpreta la intención
-3. **Detección de ambigüedades** → El agente pregunta si falta información
-4. **Generación de plan** → Se crea un plan paso a paso
-5. **Confirmación** → El usuario aprueba el plan
-6. **Ejecución** → Se ejecutan las acciones una a una
-7. **Verificación** → Cada paso se valida antes de continuar
-8. **Informe** → Resultados enviados a Discord
-
-### Componentes principales
-
-| Módulo | Función |
-|--------|---------|
-| `bot/discord_client.py` | Cliente de Discord, manejo de comandos |
-| `cognitive/ollama_client.py` | Conexión con Ollama API |
-| `cognitive/planner.py` | Generación y gestión de planes |
-| `execution/system_controller.py` | Comandos del sistema operativo |
-| `execution/desktop_controller.py` | Control de ratón y teclado |
-| `execution/browser_controller.py` | Automatización de navegador |
-| `safety/confirmation_manager.py` | Sistema de confirmaciones |
-| `safety/audit_logger.py` | Registro de todas las acciones |
-| `safety/emergency_stop.py` | Parada de emergencia |
-| `core/agent.py` | Orquestación central |
-
-## Uso básico
-
-Una vez iniciado, interactúa con el bot en Discord:
+## 🛠️ Arquitectura
 
 ```
-!agent instala Python 3.11 y configúralo en el PATH
+HostBot/
+├── bot/                    # Discord bot
+├── cognitive/              # IA y planificación
+│   ├── brain_orchestrator.py   # Coordinador central
+│   ├── ollama_client.py
+│   ├── planner.py
+│   └── prompt_templates.py
+├── vision/                 # Visión por computadora
+│   ├── screen_capture.py
+│   ├── visual_analyzer.py
+│   └── vision_orchestrator.py
+├── execution/              # Control del sistema
+│   ├── system_controller.py
+│   ├── desktop_controller.py
+│   ├── browser_controller.py
+│   └── application_controller.py
+├── safety/                 # Seguridad y auditoría
+│   ├── audit_logger.py
+│   ├── confirmation_manager.py
+│   ├── emergency_stop.py
+│   └── permission_guard.py
+├── web/                    # Interfaz web
+│   ├── main.py            # FastAPI server
+│   ├── templates/         # HTML templates
+│   └── static/            # CSS, JS
+└── core/
+    └── agent.py           # Núcleo del agente
 ```
 
-El agente responderá con preguntas si necesita clarificación, luego ejecutará el plan paso a paso.
+## 🔧 Comandos Disponibles
 
-### Comandos de Discord
+### Control de Escritorio
+- Mover ratón a coordenadas
+- Clics (izquierdo, derecho, doble)
+- Escribir texto
+- Presionar teclas especiales
+- Capturas de pantalla
 
-- `!agent <orden>` - Enviar orden al agente
-- `!confirm <id>` - Confirmar acción pendiente
-- `!deny <id>` - Denegar acción pendiente
-- `!status` - Ver estado del agente
-- `!stop <código>` - Parada de emergencia
-- `!audit` - Ver registro de acciones
+### Sistema
+- Ejecutar comandos de terminal
+- Gestión de archivos (crear, leer, modificar, eliminar)
+- Gestión de procesos (listar, iniciar, detener)
+- Información del sistema
 
+### Navegador
+- Navegar a URLs
+- Interactuar con elementos (click, type)
+- Extraer información
+- Automatización de flujos
 
-## Licencia
+### Aplicaciones
+- Instalar software (winget, chocolatey)
+- Desinstalar software
+- Actualizar software
+- Configurar aplicaciones
 
-MIT - Ver [LICENSE](LICENSE) para más detalles.
+## 🎨 Personalización
+
+### Variables de Entorno (.env)
+```env
+# Discord
+DISCORD_TOKEN=tu_token_aqui
+DISCORD_ADMIN_USER_ID=tu_user_id
+DISCORD_GUILD_ID=id_servidor_opcional
+
+# Ollama
+OLLAMA_HOST=http://localhost:11434
+OLLAMA_MODEL=llama3.2
+
+# Seguridad
+SAFETY_MODE=strict  # strict, moderate, minimal
+EMERGENCY_STOP_CODE=STOP123
+
+# Permisos
+ALLOW_DESKTOP_CONTROL=true
+ALLOW_SYSTEM_COMMANDS=true
+ALLOW_BROWSER_AUTOMATION=true
+ALLOW_SOFTWARE_INSTALLATION=false
+```
+
+## 🔄 Actualización
+
+```bash
+python update.py --status    # Verificar actualizaciones
+python update.py --apply     # Aplicar actualización
+```
+
+## 🆘 Solución de Problemas
+
+### Ollama no conecta
+```bash
+# Verificar que Ollama está corriendo
+curl http://localhost:11434/api/tags
+
+# Reiniciar Ollama
+ollama serve
+```
+
+### Discord bot no responde
+- Verificar que el token es correcto
+- Asegurar que los intents están activados
+- Comprobar que el bot tiene permisos en el servidor
+
+### Visión no funciona
+- Instalar modelo llava: `ollama pull llava`
+- Verificar que Pillow está instalado: `pip install Pillow`
+- En Windows, asegurar permisos de captura de pantalla
+
+## ⚠️ Advertencia de Seguridad
+
+**HostBot tiene control total del sistema.** Usar con precaución:
+
+1. **Nunca** compartas tu archivo `.env`
+2. Usa el modo **strict** en entornos de producción
+3. Configura un **código de emergencia** seguro
+4. Revisa siempre los planes antes de aprobar
+5. Mantén el sistema actualizado
+
+## 📄 Licencia
+
+MIT License - Ver [LICENSE](LICENSE) para detalles.
+
+## 🤝 Contribuir
+
+1. Fork el repositorio
+2. Crea una rama: `git checkout -b feature/nueva-funcionalidad`
+3. Commit tus cambios: `git commit -am 'Añadir nueva funcionalidad'`
+4. Push a la rama: `git push origin feature/nueva-funcionalidad`
+5. Abre un Pull Request
+
+## 📞 Soporte
+
+- Issues: [GitHub Issues](https://github.com/litelis/HostBot/issues)
+- Discord: Tu propio servidor con HostBot instalado 😉
 
 ---
 
-**Uso bajo tu propia responsabilidad.** Diseñado para automatización autorizada y propósitos educativos.
+**¡HostBot está listo para ayudarte!** 🚀
