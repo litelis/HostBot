@@ -20,7 +20,8 @@ class Settings(BaseSettings):
     # Discord Settings
     discord_token: str = Field(..., description="Discord bot token")
     discord_guild_id: Optional[int] = Field(None, description="Discord guild ID")
-    discord_admin_user_id: int = Field(..., description="Admin user ID for emergency access")
+    discord_admin_user_id: Optional[int] = Field(None, description="Admin user ID for emergency access")
+
     discord_command_prefix: str = Field("!", description="Command prefix")
     
     # Ollama Settings
@@ -56,6 +57,22 @@ class Settings(BaseSettings):
         path = Path(v)
         path.mkdir(parents=True, exist_ok=True)
         return path
+    
+    @validator("discord_guild_id", "discord_admin_user_id", pre=True)
+    def parse_optional_int(cls, v):
+        """Parse optional integer fields, returning None for invalid values."""
+        if v is None or v == "":
+            return None
+        if isinstance(v, int):
+            return v
+        if isinstance(v, str):
+            # Try to parse as int, return None if it fails
+            try:
+                return int(v)
+            except ValueError:
+                return None
+        return v
+
     
     @validator("safety_mode")
     def validate_safety_mode(cls, v):
