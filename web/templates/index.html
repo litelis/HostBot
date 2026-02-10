@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HostBot - Control Panel</title>
+    <link rel="stylesheet" href="/static/css/main.css">
+    <link rel="stylesheet" href="/static/css/components.css">
+    <link rel="stylesheet" href="/static/css/animations.css">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Background Effects -->
+    <div class="bg-grid"></div>
+    <div class="bg-glow"></div>
+    
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-brand">
+            <div class="logo">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                </svg>
+            </div>
+            <span class="brand-text">HostBot</span>
+            <span class="version">v2.0</span>
+        </div>
+        
+        <div class="nav-links">
+            <a href="/" class="nav-link active">Dashboard</a>
+            <a href="/config" class="nav-link">Configuración</a>
+            <a href="/setup" class="nav-link">Setup Wizard</a>
+        </div>
+        
+        <div class="nav-status">
+            <div class="status-indicator" id="agentStatus">
+                <span class="status-dot"></span>
+                <span class="status-text">Conectando...</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-container">
+        <!-- Emergency Stop Button -->
+        <button class="emergency-btn" id="emergencyBtn" onclick="triggerEmergency()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="15" y1="9" x2="9" y2="15"/>
+                <line x1="9" y1="9" x2="15" y2="15"/>
+            </svg>
+            EMERGENCY STOP
+        </button>
+
+        <!-- Command Section -->
+        <section class="command-section">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                    </svg>
+                    Comando
+                </h2>
+            </div>
+            
+            <div class="command-input-container">
+                <div class="input-group">
+                    <input 
+                        type="text" 
+                        id="commandInput" 
+                        class="command-input" 
+                        placeholder="Escribe tu comando aquí... (ej: 'Abre Chrome y busca Python')"
+                        autocomplete="off"
+                    >
+                    <div class="input-actions">
+                        <button class="btn-icon" id="visionToggle" title="Usar visión" onclick="toggleVision()">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                <circle cx="12" cy="12" r="3"/>
+                            </svg>
+                        </button>
+                        <button class="btn-primary" onclick="executeCommand()">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polygon points="5 3 19 12 5 21 5 3"/>
+                            </svg>
+                            Ejecutar
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="command-options">
+                    <label class="option-label">
+                        <input type="checkbox" id="useVision" class="option-checkbox">
+                        <span class="checkmark"></span>
+                        Usar visión (ver pantalla antes de actuar)
+                    </label>
+                    <label class="option-label">
+                        <input type="checkbox" id="autoMode" class="option-checkbox">
+                        <span class="checkmark"></span>
+                        Modo autónomo (brain orchestrator)
+                    </label>
+                    <select id="prioritySelect" class="priority-select">
+                        <option value="low">Prioridad: Baja</option>
+                        <option value="medium" selected>Prioridad: Media</option>
+                        <option value="high">Prioridad: Alta</option>
+                        <option value="critical">Prioridad: Crítica</option>
+                    </select>
+                </div>
+            </div>
+        </section>
+
+        <!-- Two Column Layout -->
+        <div class="dashboard-grid">
+            <!-- Left Column: Vision & Status -->
+            <div class="column-left">
+                <!-- Vision Preview -->
+                <section class="vision-section">
+                    <div class="section-header">
+                        <h2 class="section-title">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                                <circle cx="8.5" cy="8.5" r="1.5"/>
+                                <polyline points="21 15 16 10 5 21"/>
+                            </svg>
+                            Visión
+                        </h2>
+                        <button class="btn-secondary btn-sm" onclick="refreshVision()">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="23 4 23 10 17 10"/>
+                                <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+                            </svg>
+                            Actualizar
+                        </button>
+                    </div>
+                    
+                    <div class="vision-container" id="visionContainer">
+                        <div class="vision-placeholder">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                                <circle cx="8.5" cy="8.5" r="1.5"/>
+                                <polyline points="21 15 16 10 5 21"/>
+                            </svg>
+                            <p>Captura de pantalla aparecerá aquí</p>
+                            <button class="btn-secondary" onclick="refreshVision()">
+                                Capturar pantalla
+                            </button>
+                        </div>
+                        <img id="visionImage" class="vision-image" style="display: none;" alt="Screen capture">
+                        <div class="vision-analysis" id="visionAnalysis"></div>
+                    </div>
+                </section>
+
+                <!-- System Status -->
+                <section class="status-section">
+                    <div class="section-header">
+                        <h2 class="section-title">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                            </svg>
+                            Estado del Sistema
+                        </h2>
+                    </div>
+                    
+                    <div class="status-grid" id="statusGrid">
+                        <div class="status-card loading">
+                            <div class="status-icon">🔄</div>
+                            <div class="status-label">Cargando...</div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Right Column: Output & Tasks -->
+            <div class="column-right">
+                <!-- Output Console -->
+                <section class="output-section">
+                    <div class="section-header">
+                        <h2 class="section-title">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="4 17 10 11 4 5"/>
+                                <line x1="12" y1="19" x2="20" y2="19"/>
+                            </svg>
+                            Consola
+                        </h2>
+                        <div class="output-actions">
+                            <button class="btn-icon" onclick="clearOutput()" title="Limpiar">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="3 6 5 6 21 6"/>
+                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                                </svg>
+                            </button>
+                            <button class="btn-icon" onclick="copyOutput()" title="Copiar">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="output-console" id="outputConsole">
+                        <div class="console-line system">
+                            <span class="timestamp">[00:00:00]</span>
+                            <span class="message">HostBot Web Interface iniciado</span>
+                        </div>
+                        <div class="console-line info">
+                            <span class="timestamp">[00:00:00]</span>
+                            <span class="message">Conectando al agente...</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Active Tasks -->
+                <section class="tasks-section">
+                    <div class="section-header">
+                        <h2 class="section-title">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M9 11l3 3L22 4"/>
+                                <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+                            </svg>
+                            Tareas Activas
+                        </h2>
+                        <button class="btn-secondary btn-sm" onclick="refreshTasks()">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="23 4 23 10 17 10"/>
+                                <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+                            </svg>
+                            Actualizar
+                        </button>
+                    </div>
+                    
+                    <div class="tasks-list" id="tasksList">
+                        <div class="task-empty">
+                            No hay tareas activas
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </main>
+
+    <!-- Quick Actions Bar -->
+    <div class="quick-actions">
+        <button class="quick-btn" onclick="quickAction('screenshot')" title="Screenshot">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                <circle cx="8.5" cy="8.5" r="1.5"/>
+                <polyline points="21 15 16 10 5 21"/>
+            </svg>
+        </button>
+        <button class="quick-btn" onclick="quickAction('system_info')" title="System Info">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="18" y1="20" x2="18" y2="10"/>
+                <line x1="12" y1="20" x2="12" y2="4"/>
+                <line x1="6" y1="20" x2="6" y2="14"/>
+            </svg>
+        </button>
+        <button class="quick-btn" onclick="quickAction('list_processes')" title="Procesos">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+                <line x1="8" y1="21" x2="16" y2="21"/>
+                <line x1="12" y1="17" x2="12" y2="21"/>
+            </svg>
+        </button>
+        <button class="quick-btn" onclick="location.href='/config'" title="Configuración">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="3"/>
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+            </svg>
+        </button>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Scripts -->
+    <script src="/static/js/api.js"></script>
+    <script src="/static/js/websocket.js"></script>
+    <script src="/static/js/app.js"></script>
+</body>
+</html>

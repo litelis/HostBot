@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HostBot - Setup Wizard</title>
+    <link rel="stylesheet" href="/static/css/main.css">
+    <link rel="stylesheet" href="/static/css/components.css">
+    <link rel="stylesheet" href="/static/css/animations.css">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="setup-page">
+    <!-- Background -->
+    <div class="bg-grid"></div>
+    <div class="bg-glow setup-glow"></div>
+    
+    <!-- Setup Container -->
+    <div class="setup-container">
+        <!-- Progress Header -->
+        <div class="setup-header">
+            <div class="logo-large">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                </svg>
+            </div>
+            <h1 class="setup-title">Configuración Inicial</h1>
+            <p class="setup-subtitle">Configuremos HostBot para que funcione correctamente</p>
+            
+            <!-- Progress Bar -->
+            <div class="progress-container">
+                <div class="progress-bar" id="progressBar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <div class="progress-steps">
+                    <div class="step active" data-step="1">
+                        <div class="step-number">1</div>
+                        <div class="step-label">Discord</div>
+                    </div>
+                    <div class="step" data-step="2">
+                        <div class="step-number">2</div>
+                        <div class="step-label">Ollama</div>
+                    </div>
+                    <div class="step" data-step="3">
+                        <div class="step-number">3</div>
+                        <div class="step-label">Seguridad</div>
+                    </div>
+                    <div class="step" data-step="4">
+                        <div class="step-number">4</div>
+                        <div class="step-label">Permisos</div>
+                    </div>
+                    <div class="step" data-step="5">
+                        <div class="step-number">5</div>
+                        <div class="step-label">Finalizar</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Setup Form -->
+        <form class="setup-form" id="setupForm">
+            
+            <!-- Step 1: Discord Configuration -->
+            <div class="form-step active" data-step="1">
+                <div class="step-header">
+                    <h2 class="step-title">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+                        </svg>
+                        Configuración de Discord
+                    </h2>
+                    <p class="step-description">
+                        HostBot necesita un bot de Discord para recibir comandos. 
+                        <a href="https://discord.com/developers/applications" target="_blank" class="link">Crea uno aquí</a>
+                    </p>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="discordToken">
+                        Discord Bot Token
+                        <span class="required">*</span>
+                    </label>
+                    <div class="input-wrapper">
+                        <input 
+                            type="password" 
+                            id="discordToken" 
+                            class="form-input" 
+                            placeholder="MTAxMD..."
+                            required
+                        >
+                        <button type="button" class="input-action" onclick="togglePassword('discordToken')">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                <circle cx="12" cy="12" r="3"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <p class="form-hint">Encuentra esto en Discord Developer Portal > Bot > Token</p>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="adminUserId">
+                        Discord Admin User ID
+                        <span class="required">*</span>
+                    </label>
+                    <div class="input-wrapper">
+                        <input 
+                            type="text" 
+                            id="adminUserId" 
+                            class="form-input" 
+                            placeholder="123456789012345678"
+                            required
+                        >
+                        <button type="button" class="input-action" onclick="getMyDiscordId()">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"/>
+                                <line x1="12" y1="16" x2="12" y2="12"/>
+                                <line x1="12" y1="8" x2="12.01" y2="8"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <p class="form-hint">Tu ID de Discord (click derecho en tu nombre > Copiar ID)</p>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="guildId">
+                        Discord Guild ID (Opcional)
+                    </label>
+                    <input 
+                        type="text" 
+                        id="guildId" 
+                        class="form-input" 
+                        placeholder="123456789012345678"
+                    >
+                    <p class="form-hint">ID del servidor donde operará el bot</p>
+                </div>
+            </div>
+
+            <!-- Step 2: Ollama Configuration -->
+            <div class="form-step" data-step="2">
+                <div class="step-header">
+                    <h2 class="step-title">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 2a10 10 0 1 0 10 10H12V2z"/>
+                            <path d="M12 2a10 10 0 0 1 10 10"/>
+                            <path d="M12 12L2.5 12"/>
+                        </svg>
+                        Configuración de Ollama
+                    </h2>
+                    <p class="step-description">
+                        HostBot usa Ollama para IA local. 
+                        <a href="https://ollama.ai" target="_blank" class="link">Descárgalo aquí</a>
+                    </p>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="ollamaHost">
+                        Ollama Host
+                    </label>
+                    <input 
+                        type="text" 
+                        id="ollamaHost" 
+                        class="form-input" 
+                        value="http://localhost:11434"
+                    >
+                    <p class="form-hint">URL del servidor Ollama (normalmente localhost:11434)</p>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="ollamaModel">
+                        Modelo Principal
+                    </label>
+                    <select id="ollamaModel" class="form-select">
+                        <option value="llama3.2">Llama 3.2 (Recomendado)</option>
+                        <option value="llama3.1">Llama 3.1</option>
+                        <option value="mistral">Mistral</option>
+                        <option value="codellama">CodeLlama</option>
+                        <option value="llava">LLaVA (con visión)</option>
+                    </select>
+                    <p class="form-hint">Modelo para procesamiento de comandos</p>
+                </div>
+
+                <div class="connection-test">
+                    <button type="button" class="btn-secondary" onclick="testOllamaConnection()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="20 6 9 17 4 12"/>
+                        </svg>
+                        Probar Conexión
+                    </button>
+                    <span class="test-result" id="ollamaTestResult"></span>
+                </div>
+            </div>
+
+            <!-- Step 3: Security Settings -->
+            <div class="form-step" data-step="3">
+                <div class="step-header">
+                    <h2 class="step-title">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                        </svg>
+                        Configuración de Seguridad
+                    </h2>
+                    <p class="step-description">
+                        Define el nivel de seguridad y protección del sistema
+                    </p>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Modo de Seguridad</label>
+                    <div class="radio-group">
+                        <label class="radio-card">
+                            <input type="radio" name="safetyMode" value="strict" checked>
+                            <div class="radio-content">
+                                <div class="radio-title">Estricto</div>
+                                <div class="radio-desc">Todas las acciones requieren confirmación</div>
+                            </div>
+                        </label>
+                        <label class="radio-card">
+                            <input type="radio" name="safetyMode" value="moderate">
+                            <div class="radio-content">
+                                <div class="radio-title">Moderado</div>
+                                <div class="radio-desc">Solo acciones críticas requieren confirmación</div>
+                            </div>
+                        </label>
+                        <label class="radio-card">
+                            <input type="radio" name="safetyMode" value="minimal">
+                            <div class="radio-content">
+                                <div class="radio-title">Mínimo</div>
+                                <div class="radio-desc">Máxima autonomía, mínima intervención</div>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="emergencyCode">
+                        Código de Emergencia
+                    </label>
+                    <div class="input-wrapper">
+                        <input 
+                            type="text" 
+                            id="emergencyCode" 
+                            class="form-input" 
+                            value="STOP123"
+                        >
+                        <button type="button" class="input-action" onclick="generateEmergencyCode()">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="23 4 23 10 17 10"/>
+                                <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <p class="form-hint">Código para parada de emergencia (¡guárdalo!)</p>
+                </div>
+            </div>
+
+            <!-- Step 4: Permissions -->
+            <div class="form-step" data-step="4">
+                <div class="step-header">
+                    <h2 class="step-title">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                            <path d="M12 8v4"/>
+                            <path d="M12 16h.01"/>
+                        </svg>
+                        Permisos del Sistema
+                    </h2>
+                    <p class="step-description">
+                        Selecciona qué capacidades tendrá HostBot
+                    </p>
+                </div>
+
+                <div class="permissions-grid">
+                    <label class="permission-card">
+                        <input type="checkbox" id="allowDesktop" checked>
+                        <div class="permission-content">
+                            <div class="permission-icon">🖱️</div>
+                            <div class="permission-title">Control de Escritorio</div>
+                            <div class="permission-desc">Mover ratón, hacer clicks, escribir</div>
+                        </div>
+                    </label>
+
+                    <label class="permission-card">
+                        <input type="checkbox" id="allowSystem" checked>
+                        <div class="permission-content">
+                            <div class="permission-icon">⚡</div>
+                            <div class="permission-title">Comandos del Sistema</div>
+                            <div class="permission-desc">Ejecutar comandos de terminal</div>
+                        </div>
+                    </label>
+
+                    <label class="permission-card">
+                        <input type="checkbox" id="allowBrowser" checked>
+                        <div class="permission-content">
+                            <div class="permission-icon">🌐</div>
+                            <div class="permission-title">Automatización Web</div>
+                            <div class="permission-desc">Controlar navegador web</div>
+                        </div>
+                    </label>
+
+                    <label class="permission-card">
+                        <input type="checkbox" id="allowInstall">
+                        <div class="permission-content">
+                            <div class="permission-icon">📦</div>
+                            <div class="permission-title">Instalación de Software</div>
+                            <div class="permission-desc">Instalar y desinstalar programas</div>
+                        </div>
+                    </label>
+                </div>
+
+                <div class="warning-box">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                        <line x1="12" y1="9" x2="12" y2="13"/>
+                        <line x1="12" y1="17" x2="12.01" y2="17"/>
+                    </svg>
+                    <div>
+                        <strong>Advertencia:</strong> HostBot tendrá control total del sistema según los permisos seleccionados. 
+                        Asegúrate de entender los riesgos antes de continuar.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 5: Finalize -->
+            <div class="form-step" data-step="5">
+                <div class="step-header">
+                    <h2 class="step-title">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                            <polyline points="22 4 12 14.01 9 11.01"/>
+                        </svg>
+                        ¡Listo!
+                    </h2>
+                    <p class="step-description">
+                        Revisa tu configuración antes de guardar
+                    </p>
+                </div>
+
+                <div class="summary-box" id="configSummary">
+                    <!-- Summary will be populated by JS -->
+                </div>
+
+                <div class="success-preview">
+                    <div class="preview-icon">🚀</div>
+                    <h3>HostBot está casi listo</h3>
+                    <p>Después de guardar, podrás acceder al panel de control</p>
+                </div>
+            </div>
+
+            <!-- Navigation Buttons -->
+            <div class="form-navigation">
+                <button type="button" class="btn-secondary" id="prevBtn" onclick="prevStep()" style="display: none;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="19" y1="12" x2="5" y2="12"/>
+                        <polyline points="12 19 5 12 12 5"/>
+                    </svg>
+                    Anterior
+                </button>
+                
+                <button type="button" class="btn-primary" id="nextBtn" onclick="nextStep()">
+                    Siguiente
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="5" y1="12" x2="19" y2="12"/>
+                        <polyline points="12 5 19 12 12 19"/>
+                    </svg>
+                </button>
+                
+                <button type="submit" class="btn-success" id="saveBtn" style="display: none;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+                        <polyline points="17 21 17 13 7 13 7 21"/>
+                        <polyline points="7 3 7 8 15 8"/>
+                    </svg>
+                    Guardar y Continuar
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Scripts -->
+    <script src="/static/js/api.js"></script>
+    <script>
+        // Setup Wizard Logic
+        let currentStep = 1;
+        const totalSteps = 5;
+
+        function updateProgress() {
+            const progressFill = document.getElementById('progressFill');
+            const progress = ((currentStep - 1) / (totalSteps - 1)) * 100;
+            progressFill.style.width = progress + '%';
+            
+            // Update step indicators
+            document.querySelectorAll('.step').forEach((step, index) => {
+                if (index + 1 < currentStep) {
+                    step.classList.add('completed');
+                    step.classList.remove('active');
+                } else if (index + 1 === currentStep) {
+                    step.classList.add('active');
+                    step.classList.remove('completed');
+                } else {
+                    step.classList.remove('active', 'completed');
+                }
+            });
+        }
+
+        function showStep(step) {
+            document.querySelectorAll('.form-step').forEach(s => {
+                s.classList.remove('active');
+            });
+            document.querySelector(`.form-step[data-step="${step}"]`).classList.add('active');
+            
+            // Update buttons
+            document.getElementById('prevBtn').style.display = step === 1 ? 'none' : 'flex';
+            document.getElementById('nextBtn').style.display = step === totalSteps ? 'none' : 'flex';
+            document.getElementById('saveBtn').style.display = step === totalSteps ? 'flex' : 'none';
+            
+            // If last step, generate summary
+            if (step === totalSteps) {
+                generateSummary();
+            }
+            
+            currentStep = step;
+            updateProgress();
+        }
+
+        function nextStep() {
+            if (validateStep(currentStep) && currentStep < totalSteps) {
+                showStep(currentStep + 1);
+            }
+        }
+
+        function prevStep() {
+            if (currentStep > 1) {
+                showStep(currentStep - 1);
+            }
+        }
+
+        function validateStep(step) {
+            let valid = true;
+            
+            if (step === 1) {
+                const token = document.getElementById('discordToken').value;
+                const adminId = document.getElementById('adminUserId').value;
+                
+                if (!token || token.length < 10) {
+                    showToast('Discord Token es requerido', 'error');
+                    valid = false;
+                }
+                if (!adminId || adminId.length < 10) {
+                    showToast('Admin User ID es requerido', 'error');
+                    valid = false;
+                }
+            }
+            
+            return valid;
+        }
+
+        function generateSummary() {
+            const summary = document.getElementById('configSummary');
+            const safetyMode = document.querySelector('input[name="safetyMode"]:checked').value;
+            
+            summary.innerHTML = `
+                <div class="summary-item">
+                    <span class="summary-label">Discord Bot:</span>
+                    <span class="summary-value">✓ Configurado</span>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-label">Admin ID:</span>
+                    <span class="summary-value">${document.getElementById('adminUserId').value}</span>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-label">Modelo Ollama:</span>
+                    <span class="summary-value">${document.getElementById('ollamaModel').value}</span>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-label">Modo Seguridad:</span>
+                    <span class="summary-value">${safetyMode.toUpperCase()}</span>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-label">Permisos:</span>
+                    <span class="summary-value">
+                        ${document.getElementById('allowDesktop').checked ? '🖱️ ' : ''}
+                        ${document.getElementById('allowSystem').checked ? '⚡ ' : ''}
+                        ${document.getElementById('allowBrowser').checked ? '🌐 ' : ''}
+                        ${document.getElementById('allowInstall').checked ? '📦' : ''}
+                    </span>
+                </div>
+            `;
+        }
+
+        // Form submission
+        document.getElementById('setupForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const config = {
+                discord_token: document.getElementById('discordToken').value,
+                discord_admin_user_id: document.getElementById('adminUserId').value,
+                ollama_model: document.getElementById('ollamaModel').value,
+                ollama_host: document.getElementById('ollamaHost').value,
+                safety_mode: document.querySelector('input[name="safetyMode"]:checked').value,
+                allow_desktop_control: document.getElementById('allowDesktop').checked,
+                allow_system_commands: document.getElementById('allowSystem').checked,
+                allow_browser_automation: document.getElementById('allowBrowser').checked,
+                allow_software_installation: document.getElementById('allowInstall').checked
+            };
+            
+            const guildId = document.getElementById('guildId').value;
+            if (guildId) {
+                config.discord_guild_id = guildId;
+            }
+            
+            try {
+                const result = await api.updateConfig(config);
+                
+                if (result.success) {
+                    showToast('Configuración guardada exitosamente', 'success');
+                    setTimeout(() => {
+                        window.location.href = '/';
+                    }, 1500);
+                } else {
+                    showToast('Error: ' + result.error, 'error');
+                }
+            } catch (error) {
+                showToast('Error de conexión', 'error');
+            }
+        });
+
+        // Utility functions
+        function togglePassword(inputId) {
+            const input = document.getElementById(inputId);
+            input.type = input.type === 'password' ? 'text' : 'password';
+        }
+
+        function getMyDiscordId() {
+            window.open('https://support.discord.com/hc/en-us/articles/206346498-Where-can-I-find-my-User-Server-Message-ID-', '_blank');
+        }
+
+        function generateEmergencyCode() {
+            const code = 'STOP' + Math.random().toString(36).substring(2, 7).toUpperCase();
+            document.getElementById('emergencyCode').value = code;
+        }
+
+        async function testOllamaConnection() {
+            const resultEl = document.getElementById('ollamaTestResult');
+            resultEl.textContent = 'Probando...';
+            resultEl.className = 'test-result testing';
+            
+            try {
+                const response = await fetch('/api/status');
+                const data = await response.json();
+                
+                if (data.success && data.status.healthy) {
+                    resultEl.textContent = '✓ Conectado';
+                    resultEl.className = 'test-result success';
+                } else {
+                    resultEl.textContent = '✗ No conectado';
+                    resultEl.className = 'test-result error';
+                }
+            } catch (error) {
+                resultEl.textContent = '✗ Error de conexión';
+                resultEl.className = 'test-result error';
+            }
+        }
+
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.textContent = message;
+            container.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
+        }
+
+        // Initialize
+        updateProgress();
+    </script>
+</body>
+</html>
