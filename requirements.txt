@@ -1,0 +1,33 @@
+# Core Framework
+discord.py>=2.3.0
+aiohttp>=3.8.0
+
+# AI/LLM Integration
+ollama>=0.1.0
+
+# Desktop Automation
+pyautogui>=0.9.54
+pyperclip>=1.8.2
+Pillow>=10.0.0
+
+# Browser Automation
+playwright>=1.40.0
+
+# System Control
+psutil>=5.9.0
+pywin32>=306; platform_system=="Windows"
+wmi>=1.5.1; platform_system=="Windows"
+
+# Configuration & Logging
+pydantic>=2.0.0
+pydantic-settings>=2.0.0
+loguru>=0.7.0
+python-dotenv>=1.0.0
+
+# Security
+email-validator>=2.0.0
+cryptography>=41.0.0
+
+# Utilities
+tenacity>=8.2.0
+asyncio-mqtt>=0.16.0
