@@ -96,6 +96,9 @@ class DiscordClient(commands.Bot):
         if message.author == self.user:
             return
         
+        # Log all incoming messages for debugging
+        logger.info(f"Message from {message.author.id}: {message.content[:100]}")
+        
         # Rate limiting check
         if self.rate_limiter and not self.rate_limiter.is_admin_exempt(
             str(message.author.id), 
@@ -112,21 +115,50 @@ class DiscordClient(commands.Bot):
                 )
                 return
         
-        # Validate command input
+        # Validate and sanitize command input
+        original_content = message.content
         if self.input_validator and message.content.startswith(settings.discord_command_prefix):
+            logger.info(f"Processing command: {message.content[:100]}")
             try:
                 sanitized = self.input_validator.validate_discord_command(message.content)
-                # Replace message content with sanitized version
+                # Create a copy of the message with sanitized content for processing
+                # Note: We modify the message object directly as discord.py expects
                 message.content = sanitized
+                logger.info(f"Command sanitized, proceeding with: {message.content[:100]}")
             except ValidationError as e:
+                logger.warning(f"Command validation failed: {e.message}")
                 await message.channel.send(f"❌ **Invalid input**: {e.message}")
                 return
         
-        # Process commands
-        await self.process_commands(message)
+        # Process commands with error handling
+        try:
+            logger.info(f"Calling process_commands for: {message.content[:100]}")
+            await self.process_commands(message)
+        except Exception as e:
+            logger.error(f"Error processing command: {e}")
+            # Only send error message if it looks like a command
+            if original_content.startswith(settings.discord_command_prefix):
+                await message.channel.send(f"❌ **Command error**: {str(e)}")
+
+    async def on_command_error(self, ctx: commands.Context, error: commands.CommandError):
+        """Handle command errors."""
+        if isinstance(error, commands.CommandNotFound):
+            # Command not found - ignore or notify
+            logger.warning(f"Command not found: {ctx.message.content}")
+            await ctx.send(f"❌ Unknown command. Use `!help` for available commands.")
+        elif isinstance(error, commands.MissingRequiredArgument):
+            await ctx.send(f"❌ Missing required argument: `{error.param.name}`")
+        elif isinstance(error, commands.BadArgument):
+            await ctx.send(f"❌ Bad argument: {str(error)}")
+        elif isinstance(error, commands.CheckFailure):
+            await ctx.send("⛔ You don't have permission to use this command.")
+        else:
+            logger.error(f"Command error: {error}")
+            await ctx.send(f"❌ An error occurred: {str(error)}")
 
     
     async def _handle_confirmation_request(self, request: ConfirmationRequest) -> None:
+
         """Handle confirmation requests by sending Discord message."""
         try:
             # Get admin user
