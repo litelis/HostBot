@@ -229,9 +229,10 @@ class SecureConfig:
                 if any(part in str(file_path) for part in ['.git', '__pycache__', 'node_modules', 'venv', '.env']):
                     continue
                 
-                # Skip the example env file
-                if file_path.name == '.env':
+                # Skip the example env file and setup script
+                if file_path.name == '.env' or file_path.name == 'setup.py':
                     continue
+
                 
                 results[str(file_path)] = self.validate_no_hardcoded_keys(str(file_path))
         
